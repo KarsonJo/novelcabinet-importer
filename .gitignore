@@ -213,5 +213,4 @@ cython_debug/
 
 # test log
 crawlers/*.txt
-*.txt
 
