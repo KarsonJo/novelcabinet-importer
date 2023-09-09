@@ -296,11 +296,11 @@ class LocalBookCrawler(AbsBookCrawler):
                 # print(this_type + " " + last_type)
                 # inherit
                 if this_type == "inherit":
-                    if not last_type or last_type is "excerpt":
+                    if not last_type or last_type == "excerpt":
                         result["excerpt"] += "\n"
                         result["excerpt"] += title + reader.get_between_text(start_pos, end_pos)
                         last_type = "excerpt"
-                    elif last_type is "volume":
+                    elif last_type == "volume":
                         result["volumes"][-1]["srcIdx"][1] = end_pos
                         last_type = "volume"
                     else:

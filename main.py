@@ -61,50 +61,58 @@ async def main():
     # time_start = time.time()
     crawler = LocalBookCrawler()
     # 连接
-    async with await crawler.setup_updater(user_name=args.user,
-                                           pass_key=args.password,
-                                           schema=args.schema,
-                                           host=args.host,
-                                           base_path=args.namespace):
-        # ls = [r"G:\PycharmProjects\novelcabinet.importer\sample-novel.txt"]
-        ls = list_txt(input_directory, args.recursive)
-        # txt一览
-        for file_path in ls:
-            # 打开一个
-            try:
-                with crawler.open(file_path):
-                    # 开始log
-                    curr_file_name = os.path.basename(file_path)
-                    logger and logger.write_log("name", curr_file_name, "incremental insert")
-                    print(curr_file_name)
-                    time_start = time.time()
+    try:
+        async with await crawler.setup_updater(user_name=args.user,
+                                               pass_key=args.password,
+                                               schema=args.schema,
+                                               host=args.host,
+                                               base_path=args.namespace):
+            # ls = [r"G:\PycharmProjects\novelcabinet.importer\sample-novel.txt"]
+            ls = list_txt(input_directory, args.recursive)
+            if len(ls) == 0:
+                print("No novel found in directory")
+            else:
+                # txt一览
+                for file_path in ls:
+                    # 打开一个
+                    try:
+                        with crawler.open(file_path):
+                            # 开始log
+                            curr_file_name = os.path.basename(file_path)
+                            logger and logger.write_log("name", curr_file_name, "incremental insert")
+                            print(curr_file_name)
+                            time_start = time.time()
 
-                    # 尝试提取书名和作者
-                    match = re.search(r"《(.*?)》", curr_file_name)
-                    title = match.group(1) if match else None
-                    match = re.search(r"作者：(.*?)[&.]", curr_file_name)
-                    author = match.group(1) if match else None
-                    if author is None and title is None:
-                        match = re.match(r"(.*?)[（.]", curr_file_name)
-                        title = match.group(1) if match else None
-                    # print(title)
-                    # print(author)
-                    # print("a?")
-                    # 插入
-                    crawler.load_contents(title, author)
-                    # await crawler.debug_print()
-                    result = await crawler.incremental_insert(logger=logger)
+                            # 尝试提取书名和作者
+                            match = re.search(r"《(.*?)》", curr_file_name)
+                            title = match.group(1) if match else None
+                            match = re.search(r"作者：(.*?)[&.]", curr_file_name)
+                            author = match.group(1) if match else None
+                            if author is None and title is None:
+                                match = re.match(r"(.*?)[（.]", curr_file_name)
+                                title = match.group(1) if match else None
+                            # print(title)
+                            # print(author)
+                            # print("a?")
+                            # 插入
+                            crawler.load_contents(title, author)
+                            # await crawler.debug_print()
+                            result = await crawler.incremental_insert(logger=logger)
 
-                    # # 结束log
-                    if not result:
-                        raise Exception("incremental_insert return false")
+                            # # 结束log
+                            if not result:
+                                raise Exception("incremental_insert return false")
 
-                    time_end = time.time()
-                    print(f"execution time: {time_end - time_start}")
-            except Exception as e:
-                logger and logger.write_err_log(f"{os.path.basename(file_path)}: {repr(e)}", "incremental insert")
+                            time_end = time.time()
+                            print(f"execution time: {time_end - time_start}")
+                    except Exception as e:
+                        logger and logger.write_err_log(f"{os.path.basename(file_path)}: {repr(e)}",
+                                                        "incremental insert")
 
         logger and logger.write_log("done", "total", "execution")
+    except ConnectionError as e:
+        print(e)
+
 
 if __name__ == '__main__':
     asyncio.run(main())

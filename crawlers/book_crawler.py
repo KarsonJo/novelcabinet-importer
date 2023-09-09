@@ -39,7 +39,7 @@ class AbsBookCrawler(ABC):
 
         if await self.book_updater.setup_host(schema, host) is False:
             await self.close_updater()
-            raise ConnectionError(f"cannot setup api connection to: {schema}://{host}")
+            raise ConnectionError(f"cannot setup api connection to: {schema}://{host}\nuser:{user_name} key:{pass_key}")
 
         if await self.fetch_genres() is False:
             print("获取类型失败")
