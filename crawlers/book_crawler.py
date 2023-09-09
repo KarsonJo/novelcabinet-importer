@@ -92,8 +92,10 @@ class AbsBookCrawler(ABC):
                 # 查询到的第一条
                 book: dict = books[0]
 
-                logger and logger.add_log("steps", "book", f"found: id={book['id']}", "step")
+                logger and logger.add_log("steps", "search", f"found: id={book['id']}", "step")
             else:
+                logger and logger.add_log("steps", "search", f"not found, will insert", "step")
+
                 status, result = await updater.add_book({
                     "title": basic_info["title"],
                     "author": basic_info["author"],
