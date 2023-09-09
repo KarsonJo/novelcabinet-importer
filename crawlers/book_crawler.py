@@ -19,16 +19,22 @@ class AbsBookCrawler(ABC):
     async def __aexit__(self, exc_type: Exception, exc_val, err_traceback) -> None:
         await self.close_updater()
 
-    async def setup_updater(self, schema='https', host='novelcabinet.lndo.site', base_path='wp-json/kbp/v1')\
-            -> "AbsBookCrawler":
+    async def setup_updater(self,
+                            user_name: str,
+                            pass_key: str,
+                            schema: str = 'https',
+                            host: str = 'novelcabinet.lndo.site',
+                            base_path: str = 'wp-json/kbp/v1') -> "AbsBookCrawler":
         """
         与api服务器建立会话连接
+        :param user_name:
+        :param pass_key:
         :param schema:
         :param host:
         :param base_path:
         :return:
         """
-        self.book_updater = BookUpdater(base_path)
+        self.book_updater = BookUpdater(base_path, user_name, pass_key)
         self.book_updater.create_session()
 
         if await self.book_updater.setup_host(schema, host) is False:

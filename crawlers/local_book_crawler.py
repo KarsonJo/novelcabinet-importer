@@ -422,7 +422,7 @@ async def main():
     # time_start = time.time()
     crawler = LocalBookCrawler()
     # 连接
-    async with await crawler.setup_updater():
+    async with await crawler.setup_updater("mkr67n", "j6DD pK9T EguN ooN1 SEhc WtAw",):
         # ls = [r"G:\PycharmProjects\novelcabinet.importer\sample-novel.txt"]
         ls = list_txt(current_directory)
         # txt一览
@@ -469,7 +469,7 @@ async def debug_main():
     # time_start = time.time()
     crawler = LocalBookCrawler()
     # 连接
-    async with await crawler.setup_updater():
+    async with await crawler.setup_updater("mkr67n", "j6DD pK9T EguN ooN1 SEhc WtAw",):
         ls = [r"G:\PycharmProjects\novelcabinet.importer\sample-novel.txt"]
         # ls = [r"C:\Users\15472\Desktop\novels\《从零开始》（校对版全本）作者：雷云风暴.txt"]
         # txt一览
@@ -479,7 +479,7 @@ async def debug_main():
                 with crawler.open(file_path):
                     # 开始log
                     curr_file_name = os.path.basename(file_path)
-                    logger and logger.write_log("name", curr_file_name, "incremental insert")
+                    # logger and logger.write_log("name", curr_file_name, "incremental insert")
                     print(curr_file_name)
                     time_start = time.time()
 
@@ -490,12 +490,11 @@ async def debug_main():
                     time_end = time.time()
                     print(f"execution time: {time_end - time_start}")
             except Exception as e:
-                logger and logger.write_err_log(f"{os.path.basename(file_path)}: {repr(e)}", "incremental insert")
-
-        logger and logger.write_log("done", "total", "execution")
+                # logger and logger.write_err_log(f"{os.path.basename(file_path)}: {repr(e)}", "incremental insert")
+                print(repr(e))
+        # logger and logger.write_log("done", "total", "execution")
 # time_end = time.time()
 # print(f"execution time: {time_end - time_start}")
 
 if __name__ == '__main__':
     asyncio.run(main())
-

@@ -15,6 +15,12 @@ def list_txt(directory, recursive:str = False):
 
 async def main():
     arg_parser = argparse.ArgumentParser()
+    arg_parser.add_argument("-u", "--user", type=str, default="admin",
+                            help="api username")
+
+    arg_parser.add_argument("-p", "--password", type=str, default="",
+                            help="api password (application key)")
+
     arg_parser.add_argument("-d", "--directory", nargs="?", const=".", type=str, default=".",
                             help="input directory, default current directory")
 
@@ -39,7 +45,6 @@ async def main():
     arg_parser.add_argument("-s", "--schema", nargs="?", const="https", type=str, default="https",
                             help="http or https")
 
-
     args = arg_parser.parse_args()
     input_directory = args.directory
 
@@ -50,10 +55,17 @@ async def main():
         logger and logger.out_redirect(args.log_out)
         logger and logger.err_redirect(args.log_err)
 
+    # print(args.user)
+    # print(args.password)
+
     # time_start = time.time()
     crawler = LocalBookCrawler()
     # 连接
-    async with await crawler.setup_updater(schema=args.schema, host=args.host, base_path=args.namespace):
+    async with await crawler.setup_updater(user_name=args.user,
+                                           pass_key=args.password,
+                                           schema=args.schema,
+                                           host=args.host,
+                                           base_path=args.namespace):
         # ls = [r"G:\PycharmProjects\novelcabinet.importer\sample-novel.txt"]
         ls = list_txt(input_directory, args.recursive)
         # txt一览
@@ -96,3 +108,4 @@ async def main():
 
 if __name__ == '__main__':
     asyncio.run(main())
+    # input()

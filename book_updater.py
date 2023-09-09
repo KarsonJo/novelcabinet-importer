@@ -14,7 +14,7 @@ import aiohttp
 
 
 class BookUpdater(AbstractBookUpdater):
-    def __init__(self, api_path: str):
+    def __init__(self, api_path: str, user_name: str, pass_key: str):
         self.base_url: str = ''
         self.session: Union[ClientSession, None] = None
         self.namespace: str = api_path
@@ -25,7 +25,7 @@ class BookUpdater(AbstractBookUpdater):
         self.book_chapters_segment: str = ''
         self.volume_chapters_segment: str = ''
         self.headers: dict = {
-            'Authorization': self.basic_auth('mkr67n', 'j6DD pK9T EguN ooN1 SEhc WtAw'),
+            'Authorization': self.basic_auth(user_name, pass_key),
             'content-type': 'application/json'
         }
         self.max_retries: int = 3
