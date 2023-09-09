@@ -62,17 +62,24 @@ class BookUpdater(AbstractBookUpdater):
             return await self.fetch_data()
         try:
             self.base_url: str = "http://127.0.0.1"
+            print(f"try connecting to {self.base_url}")
+
             status, response = await connection_test()
             if status == 200:
                 self.get_routes(response)
-                print("setup localhost as host")
+                print(f"setup {self.base_url} as host")
                 return True
 
             if not assert_authorization(status):
                 self.base_url = ''
+                if status == 401:
+                    print("note for 401 on localhost: if you ensure your key is correct, "
+                          "please check if your reverse proxy forwards your ip (in this case 127.0.0.1) correctly")
                 return False
 
             self.base_url = f"{scheme}://{host}"
+            print(f"try connecting to {self.base_url}")
+
             status, response = await connection_test()
             if status == 200:
                 self.get_routes(response)

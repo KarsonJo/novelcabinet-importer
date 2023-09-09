@@ -9,8 +9,8 @@ from crawlers.local_book_crawler import LocalBookCrawler
 from helpers.logger import Logger
 
 
-def list_txt(directory, recursive:str = False):
-    return glob.glob(os.path.join(directory, "**/*.txt" if recursive else "/*.txt"), recursive=True)
+def list_txt(directory, recursive: str = False):
+    return glob.glob(os.path.join(directory, "**/*.txt" if recursive else "*.txt"), recursive=True)
 
 
 async def main():

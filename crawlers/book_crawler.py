@@ -37,7 +37,7 @@ class AbsBookCrawler(ABC):
         self.book_updater = BookUpdater(base_path, user_name, pass_key)
         self.book_updater.create_session()
 
-        if await self.book_updater.setup_host(schema, host) is False:
+        if not await self.book_updater.setup_host(schema, host):
             await self.close_updater()
             raise ConnectionError(f"cannot setup api connection to: {schema}://{host}\nuser:{user_name} key:{pass_key}")
 
